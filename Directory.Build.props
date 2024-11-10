@@ -1,0 +1,19 @@
+<Project>
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<LangVersion>12</LangVersion>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<AnalysisLevel>latest-all</AnalysisLevel>
+		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+		<NoWarn>CA1819;CA1034;CA2201;CA1008;CA1054;CA1055;CA1056;CA2227;CA2234</NoWarn>
+
+		<UserSecretsId>cb5ee577-cacc-45af-8373-19c658ab10bc</UserSecretsId>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.CodeAnalysis.PerformanceSensitiveAnalyzers" Version="3.3.1" PrivateAssets="All" />
+	</ItemGroup>
+
+</Project>
