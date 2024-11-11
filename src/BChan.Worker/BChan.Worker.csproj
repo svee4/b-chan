@@ -1,7 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk.Worker">
 
 	<PropertyGroup>
-		<UserSecretsId>dotnet-BChan.Worker-f79069dd-9112-423b-a02e-676c0a037511</UserSecretsId>
 		<NoWarn>CA2007;CA1303;CA1848</NoWarn>
 	</PropertyGroup>
 
