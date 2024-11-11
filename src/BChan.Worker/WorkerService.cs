@@ -55,7 +55,11 @@ public class WorkerService(
 				_logger.LogInformation("No commands registered");
 			}
 
-			var interactions = await _interactionService.AddModulesAsync(typeof(WorkerService).Assembly, _serviceProvider);
+			// for some reason, AddModulesAsync calls the constructors of the modules,
+			// which means to use scoped dependencies you need to create a scope for it.
+			// in actual use, the modules are scoped
+			using var scope = _serviceProvider.CreateScope();
+			var interactions = await _interactionService.AddModulesAsync(typeof(WorkerService).Assembly, scope.ServiceProvider);
 
 			var anyInteractions = false;
 			foreach (var module in interactions)
@@ -115,7 +119,7 @@ public class WorkerService(
 
 	public async Task StopAsync(CancellationToken cancellationToken)
 	{
-		_logger.LogInformation("Worker stopping");
+		_logger.LogInformation("Stopping");
 
 		_socketClient.InteractionCreated -= OnSocketClientInteractionCreated;
 		_socketClient.Log -= HandleDiscordNetLogMessage;
@@ -126,6 +130,6 @@ public class WorkerService(
 		_interactionService.Dispose();
 		await _socketClient.DisposeAsync();
 
-		_logger.LogInformation("Worker stopped");
+		_logger.LogInformation("Stopped");
 	}
 }

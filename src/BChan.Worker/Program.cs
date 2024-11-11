@@ -1,5 +1,6 @@
 using BChan.Worker;
-using BChan.Worker.Handlers;
+using BChan.Worker.Features.Test;
+using BChan.Worker.Infra.DiscordEvents;
 using Discord.Commands;
 using Discord.Interactions;
 using Discord.WebSocket;
@@ -18,10 +19,11 @@ builder.Services.Configure<BChanWorkerConfiguration>(builder.Configuration.GetSe
 AddDiscordServices(builder);
 
 builder.Services.AddHostedService<WorkerService>();
-builder.Services.AddHostedService<DiscordEventListener>();
+builder.Services.AddHostedService<EventPublisher>();
+
+builder.Services.AddScoped<TestService>();
 
 builder.Services.AddHandlers();
-
 
 var host = builder.Build();
 host.Run();
@@ -47,9 +49,9 @@ static void AddDiscordServices(HostApplicationBuilder builder)
 		sp.GetRequiredService<DiscordSocketClient>().Rest,
 		new InteractionServiceConfig()
 		{
-			LogLevel = Discord.LogSeverity.Debug
+			LogLevel = Discord.LogSeverity.Debug,
+			AutoServiceScopes = true
 		}));
-
 }
 
 #pragma warning restore IDE0058 // Expression value is never used
