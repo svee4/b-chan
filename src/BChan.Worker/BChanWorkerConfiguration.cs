@@ -7,4 +7,5 @@ public sealed class BChanWorkerConfiguration
 
 	public required string DiscordBotToken { get; set; }
 	public required ulong DiscordGuildId { get; set; }
+	public required string DbConnectionString { get; set; }
 }
