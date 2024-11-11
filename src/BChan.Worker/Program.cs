@@ -1,4 +1,5 @@
 using BChan.Worker;
+using BChan.Worker.Handlers;
 using Discord.Commands;
 using Discord.Interactions;
 using Discord.WebSocket;
@@ -15,10 +16,16 @@ if (builder.Environment.IsDevelopment())
 builder.Services.Configure<BChanWorkerConfiguration>(builder.Configuration.GetSection(BChanWorkerConfiguration.Section));
 
 AddDiscordServices(builder);
+
 builder.Services.AddHostedService<WorkerService>();
+builder.Services.AddHostedService<DiscordEventListener>();
+
+builder.Services.AddHandlers();
+
 
 var host = builder.Build();
 host.Run();
+
 
 static void AddDiscordServices(HostApplicationBuilder builder)
 {
