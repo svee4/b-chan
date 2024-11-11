@@ -18,3 +18,8 @@ The recommended method for handling configuration in development is `user-secret
 For example: 
 - `cd src/BChan.Worker`
 - `dotnet user-secrets set "BChan:DiscordBotToken" "MyBotToken"`
+
+## Database changes
+Updating database models requires creating a migration.
+After updating the models under `src/BChan.Worker/Database`, create a new migration by running 
+`dotnet ef migrations add "My migration name"`. The migration will be automatically applied at startup.
