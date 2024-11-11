@@ -11,7 +11,7 @@ public class WorkerService(
 	DiscordSocketClient socketClient,
 	CommandService commandService,
 	InteractionService interactionService,
-	IOptions<BChanWorkerConfiguration> configuration,
+	IOptions<BChanWorkerConfiguration> configurationOptions,
 	IServiceProvider serviceProvider,
 	ILogger<WorkerService> logger) : IHostedService
 {
@@ -19,7 +19,7 @@ public class WorkerService(
 	private readonly DiscordSocketClient _socketClient = socketClient;
 	private readonly CommandService _commandService = commandService;
 	private readonly InteractionService _interactionService = interactionService;
-	private readonly BChanWorkerConfiguration _configuration = configuration.Value;
+	private readonly BChanWorkerConfiguration _configuration = configurationOptions.Value;
 	private readonly IServiceProvider _serviceProvider = serviceProvider;
 	private readonly ILogger<WorkerService> _logger = logger;
 
@@ -97,16 +97,18 @@ public class WorkerService(
 
 	private Task HandleDiscordNetLogMessage(LogMessage message)
 	{
-		_logger.Log(message.Severity switch
-		{
-			Discord.LogSeverity.Critical => LogLevel.Critical,
-			Discord.LogSeverity.Error => LogLevel.Error,
-			Discord.LogSeverity.Warning => LogLevel.Warning,
-			Discord.LogSeverity.Info => LogLevel.Information,
-			Discord.LogSeverity.Verbose => LogLevel.Debug,
-			Discord.LogSeverity.Debug => LogLevel.Debug,
-			_ => throw new UnreachableException(),
-		}, message.ToString());
+		_logger.Log(
+			logLevel: message.Severity switch
+			{
+				Discord.LogSeverity.Critical => LogLevel.Critical,
+				Discord.LogSeverity.Error => LogLevel.Error,
+				Discord.LogSeverity.Warning => LogLevel.Warning,
+				Discord.LogSeverity.Info => LogLevel.Information,
+				Discord.LogSeverity.Verbose => LogLevel.Debug,
+				Discord.LogSeverity.Debug => LogLevel.Debug,
+				_ => throw new UnreachableException(),
+			},
+			message: message.ToString());
 
 		return Task.CompletedTask;
 	}
@@ -114,6 +116,11 @@ public class WorkerService(
 	public async Task StopAsync(CancellationToken cancellationToken)
 	{
 		_logger.LogInformation("Worker stopping");
+
+		_socketClient.InteractionCreated -= OnSocketClientInteractionCreated;
+		_socketClient.Log -= HandleDiscordNetLogMessage;
+		_commandService.Log -= HandleDiscordNetLogMessage;
+		_interactionService.Log -= HandleDiscordNetLogMessage;
 
 		await _socketClient.StopAsync();
 		_interactionService.Dispose();
