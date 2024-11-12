@@ -35,19 +35,22 @@ public sealed class EventPublisher(
 	}
 
 
-	private async Task UserVoiceStateUpdated(SocketUser user, SocketVoiceState what1, SocketVoiceState what2) =>
-		await PublishEvent(new UserVoiceStateUpdatedEvent(user, what1, what2));
+	private Task UserVoiceStateUpdated(SocketUser user, SocketVoiceState what1, SocketVoiceState what2) =>
+		PublishEvent(new UserVoiceStateUpdatedEvent(user, what1, what2));
 
-
-	private async Task PublishEvent<TEvent>(TEvent @event)
+	// returns a task only because the event handlers need to return task and this makes them able to be oneliners
+	private Task PublishEvent<TEvent>(TEvent @event)
 	{
 		_logger.LogDebug("Publishing event '{Type}'", typeof(TEvent).FullName);
 
 		using var scope = _serviceProvider.CreateScope();
-		var handlers = scope.ServiceProvider.GetRequiredService<IEnumerable<IHandler<TEvent, ValueTuple>>>();
-		foreach (var handler in handlers)
+		var handlers = scope.ServiceProvider.GetService<IEnumerable<IHandler<TEvent, ValueTuple>>>();
+
+		foreach (var handler in handlers ?? [])
 		{
-			_ = await handler.HandleAsync(@event);
+			_ = Task.Run(() => handler.HandleAsync(@event));
 		}
+
+		return Task.CompletedTask;
 	}
 }
