@@ -13,7 +13,7 @@ public sealed class ScopedServiceAccessor<TService>(IServiceScopeFactory factory
 	}
 
 	[SuppressMessage("", "CA1034:Nested types should not be visible", Justification = "It just makes sense")]
-	public sealed class ScopedServiceOwner(TService service, IServiceScope scope) : IDisposable
+	public readonly struct ScopedServiceOwner(TService service, IServiceScope scope) : IDisposable
 	{
 		private readonly IServiceScope _scope = scope;
 
