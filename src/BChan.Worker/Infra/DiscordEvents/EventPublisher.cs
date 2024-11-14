@@ -43,12 +43,15 @@ public sealed class EventPublisher(
 	{
 		_logger.LogDebug("Publishing event '{Type}'", typeof(TEvent).FullName);
 
-		using var scope = _serviceProvider.CreateScope();
-		var handlers = scope.ServiceProvider.GetService<IEnumerable<IHandler<TEvent, ValueTuple>>>();
+		var handlers = _serviceProvider.GetService<IEnumerable<ScopedServiceAccessor<IHandler<TEvent, ValueTuple>>>>();
 
 		foreach (var handler in handlers ?? [])
 		{
-			_ = Task.Run(() => handler.HandleAsync(@event));
+			_ = Task.Run(async () =>
+			{
+				using var scopeOwner = handler.CreateScope();
+				_ = await scopeOwner.Service.HandleAsync(@event);
+			});
 		}
 
 		return Task.CompletedTask;

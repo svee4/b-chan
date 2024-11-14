@@ -1,6 +1,7 @@
 using BChan.Worker;
 using BChan.Worker.Database;
 using BChan.Worker.Features.Test;
+using BChan.Worker.Infra;
 using BChan.Worker.Infra.DiscordEvents;
 using Discord.Commands;
 using Discord.Interactions;
@@ -21,11 +22,14 @@ builder.Services.Configure<BChanWorkerConfiguration>(builder.Configuration.GetSe
 builder.Services.AddNpgsql<AppDbContext>(
 	builder.Configuration.GetSection("BChan").Get<BChanWorkerConfiguration>()!.DbConnectionString);
 
+builder.Services.AddSingleton(typeof(ScopedServiceAccessor<>));
+
 AddDiscordServices(builder);
 
 builder.Services.AddHostedService<WorkerService>();
 builder.Services.AddHostedService<EventPublisher>();
 
+builder.Services.AddScoped<BotConfigurationManager>();
 builder.Services.AddScoped<TestService>();
 
 builder.Services.AddHandlers();
