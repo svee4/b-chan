@@ -1,39 +1,39 @@
 using BChan.Worker.Infra;
 using Discord.Interactions;
 using Discord.WebSocket;
-using System.Diagnostics;
 
 namespace BChan.Worker.Features.AutoRole;
 
-[Group("configure", "Configure things ^_^")]
-public sealed class ConfigurationModule(BotConfigurationManager manager) : InteractionModuleBase
+[Group("autorole", "Autorole configuration")]
+public sealed class ConfigurationModule(BotConfigurationManager manager, DiscordSocketClient client) : InteractionModuleBase
 {
 	private readonly BotConfigurationManager _manager = manager;
+	private readonly DiscordSocketClient _client = client;
 
-	[SlashCommand("autorole", "Auto role.,,")]
-	public async Task Thing(ConfigurationAction action, SocketRole role)
+	[SlashCommand("add", "Add autorole")]
+	[RequireUserPermission(Discord.GuildPermission.Administrator)]
+	public async Task Add(SocketRole role)
 	{
-		switch (action)
-		{
-			case ConfigurationAction.Add:
-				await _manager.AddAutoRole(role.Id, default);
-				await RespondAsync($"Role {role.Name} added to autorole");
-				break;
-
-			case ConfigurationAction.Remove:
-				await _manager.RemoveAutoRole(role.Id, default);
-				await RespondAsync($"Role {role.Name} removed from autorole");
-				break;
-
-			default: throw new UnreachableException();
-		}
+		await _manager.AddAutoRole(role.Id, default);
+		await RespondAsync($"Role {role.Name} added to autorole");
 	}
 
-	// i dont know why Directory.Build.props NoWarn isnt working on this???
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1008:Enums should have zero value", Justification = "<Pending>")]
-	public enum ConfigurationAction
+	[SlashCommand("remove", "Remove autorole")]
+	[RequireUserPermission(Discord.GuildPermission.Administrator)]
+	public async Task Remove(SocketRole role)
 	{
-		Add = 1,
-		Remove
+		await _manager.RemoveAutoRole(role.Id, default);
+		await RespondAsync($"Role {role.Name} removed from autorole");
+	}
+
+	[SlashCommand("list", "List autoroles")]
+	[RequireUserPermission(Discord.GuildPermission.Administrator)]
+	public async Task List()
+	{
+		var roles = await _manager.GetAutoRoles(default);
+		var roleNames = _client.Guilds.Single().Roles
+							.Where(role => roles.Contains(role.Id))
+							.Select(role => role.Name);
+		await RespondAsync($"Autoroles: {string.Join(", ", roleNames)}");
 	}
 }
