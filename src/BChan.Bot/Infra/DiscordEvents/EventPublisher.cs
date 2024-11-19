@@ -47,7 +47,10 @@ public sealed class EventPublisher(
 	// returns a task only because the event handlers need to return task and this makes them able to be oneliners
 	private Task PublishEvent<TEvent>(TEvent @event)
 	{
-		_logger.LogDebug("Publishing event '{Type}'", typeof(TEvent).FullName);
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("Publishing event '{Type}'", typeof(TEvent).FullName);
+		}
 
 		var handlers = _serviceProvider.GetService<IEnumerable<ScopedServiceAccessor<IHandler<TEvent, ValueTuple>>>>();
 
