@@ -19,6 +19,7 @@ public sealed class EventPublisher(
 		_logger.LogInformation("Starting");
 
 		_socketClient.UserVoiceStateUpdated += UserVoiceStateUpdated;
+		_socketClient.UserJoined += UserJoined;
 
 		_logger.LogInformation("Started");
 		return Task.CompletedTask;
@@ -29,6 +30,7 @@ public sealed class EventPublisher(
 		_logger.LogInformation("Stopping");
 
 		_socketClient.UserVoiceStateUpdated -= UserVoiceStateUpdated;
+		_socketClient.UserJoined -= UserJoined;
 
 		_logger.LogInformation("Stopped");
 		return Task.CompletedTask;
@@ -37,6 +39,10 @@ public sealed class EventPublisher(
 
 	private Task UserVoiceStateUpdated(SocketUser user, SocketVoiceState what1, SocketVoiceState what2) =>
 		PublishEvent(new UserVoiceStateUpdatedEvent(user, what1, what2));
+
+	private Task UserJoined(SocketGuildUser arg) =>
+		PublishEvent(new UserJoinedEvent(arg));
+
 
 	// returns a task only because the event handlers need to return task and this makes them able to be oneliners
 	private Task PublishEvent<TEvent>(TEvent @event)

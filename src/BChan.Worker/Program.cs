@@ -53,6 +53,7 @@ static void AddDiscordServices(HostApplicationBuilder builder)
 		new DiscordSocketConfig()
 		{
 			LogLevel = Discord.LogSeverity.Debug,
+			GatewayIntents = Discord.GatewayIntents.AllUnprivileged | Discord.GatewayIntents.GuildMembers
 		}));
 
 	builder.Services.AddSingleton(_ => new CommandService(

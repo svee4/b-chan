@@ -15,6 +15,6 @@ public static partial class TestEventConsumer
 	{
 		await Task.Delay(50, token);
 		service.DoServiceThing();
-		var roles = await manager.GetAutoRoles(token);
+		_ = await manager.GetAutoRoles(token);
 	}
 }

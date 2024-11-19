@@ -21,7 +21,7 @@ public sealed class BotConfigurationManager(AppDbContext dbContext)
 		await _dbContext.SaveChangesAsync(token);
 	}
 
-	public async Task<IEnumerable<ulong>> GetAutoRoles(CancellationToken token) =>
+	public async Task<IList<ulong>> GetAutoRoles(CancellationToken token) =>
 		(await GetBotConfiguration(token)).AutoRolesIds;
 
 	public async Task AddAutoRole(ulong id, CancellationToken token) =>
