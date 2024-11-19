@@ -7,10 +7,13 @@ using Discord.Commands;
 using Discord.Interactions;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 #pragma warning disable IDE0058 // Expression value is never used
 
 var builder = Host.CreateApplicationBuilder(args);
+
+builder.Services.AddSerilog((sp, logger) => logger.ReadFrom.Configuration(sp.GetRequiredService<IConfiguration>()));
 
 if (builder.Environment.IsDevelopment())
 {
@@ -31,6 +34,7 @@ builder.Services.AddHostedService<EventPublisher>();
 
 builder.Services.AddScoped<BotConfigurationManager>();
 builder.Services.AddScoped<TestService>();
+builder.Services.AddSingleton<DiscordNetLogger>();
 
 builder.Services.AddHandlers();
 

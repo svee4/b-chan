@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using BChan.Bot.Infra;
 using Discord;
 using Discord.Commands;
 using Discord.Interactions;
@@ -11,6 +12,7 @@ public class WorkerService(
 	DiscordSocketClient socketClient,
 	CommandService commandService,
 	InteractionService interactionService,
+	DiscordNetLogger discordNetLogger,
 	IOptions<BChanBotConfiguration> configurationOptions,
 	IServiceProvider serviceProvider,
 	ILogger<WorkerService> logger) : IHostedService
@@ -19,15 +21,16 @@ public class WorkerService(
 	private readonly DiscordSocketClient _socketClient = socketClient;
 	private readonly CommandService _commandService = commandService;
 	private readonly InteractionService _interactionService = interactionService;
+	private readonly DiscordNetLogger _discordNetLogger = discordNetLogger;
 	private readonly BChanBotConfiguration _configuration = configurationOptions.Value;
 	private readonly IServiceProvider _serviceProvider = serviceProvider;
 	private readonly ILogger<WorkerService> _logger = logger;
 
 	public async Task StartAsync(CancellationToken cancellationToken)
 	{
-		_socketClient.Log += HandleDiscordNetLogMessage;
-		_commandService.Log += HandleDiscordNetLogMessage;
-		_interactionService.Log += HandleDiscordNetLogMessage;
+		_socketClient.Log += _discordNetLogger.Log;
+		_commandService.Log += _discordNetLogger.Log;
+		_interactionService.Log += _discordNetLogger.Log;
 
 		await AddModules();
 		await StartClient();
@@ -95,32 +98,14 @@ public class WorkerService(
 		// this delegates interactions to the actual InteractionService
 		await _interactionService.ExecuteCommandAsync(new SocketInteractionContext(_socketClient, interaction), _serviceProvider);
 
-	private Task HandleDiscordNetLogMessage(LogMessage message)
-	{
-		_logger.Log(
-			logLevel: message.Severity switch
-			{
-				LogSeverity.Critical => LogLevel.Critical,
-				LogSeverity.Error => LogLevel.Error,
-				LogSeverity.Warning => LogLevel.Warning,
-				LogSeverity.Info => LogLevel.Information,
-				LogSeverity.Verbose => LogLevel.Debug,
-				LogSeverity.Debug => LogLevel.Debug,
-				_ => throw new UnreachableException(),
-			},
-			message: message.ToString());
-
-		return Task.CompletedTask;
-	}
-
 	public async Task StopAsync(CancellationToken cancellationToken)
 	{
 		_logger.LogInformation("Stopping");
 
 		_socketClient.InteractionCreated -= OnSocketClientInteractionCreated;
-		_socketClient.Log -= HandleDiscordNetLogMessage;
-		_commandService.Log -= HandleDiscordNetLogMessage;
-		_interactionService.Log -= HandleDiscordNetLogMessage;
+		_socketClient.Log -= _discordNetLogger.Log;
+		_commandService.Log -= _discordNetLogger.Log;
+		_interactionService.Log -= _discordNetLogger.Log;
 
 		await _socketClient.StopAsync();
 		_interactionService.Dispose();
