@@ -1,6 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 
-namespace BChan.Worker.Infra;
+namespace BChan.Bot.Infra;
 
 public sealed class ScopedServiceAccessor<TService>(IServiceScopeFactory factory) where TService : class
 {

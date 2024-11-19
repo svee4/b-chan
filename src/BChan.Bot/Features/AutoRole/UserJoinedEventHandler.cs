@@ -1,5 +1,5 @@
-using BChan.Worker.Infra;
-using BChan.Worker.Infra.DiscordEvents;
+using BChan.Bot.Infra;
+using BChan.Bot.Infra.DiscordEvents;
 using Immediate.Handlers.Shared;
 
 namespace BChan.Worker.Features.AutoRole;

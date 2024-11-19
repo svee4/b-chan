@@ -1,7 +1,6 @@
+namespace BChan.Bot;
 
-namespace BChan.Worker;
-
-public sealed class BChanWorkerConfiguration
+public sealed class BChanBotConfiguration
 {
 	public const string Section = "BChan";
 

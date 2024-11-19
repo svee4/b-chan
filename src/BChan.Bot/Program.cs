@@ -1,8 +1,8 @@
-using BChan.Worker;
-using BChan.Worker.Database;
-using BChan.Worker.Features.Test;
-using BChan.Worker.Infra;
-using BChan.Worker.Infra.DiscordEvents;
+using BChan.Bot;
+using BChan.Bot.Database;
+using BChan.Bot.Features.Test;
+using BChan.Bot.Infra;
+using BChan.Bot.Infra.DiscordEvents;
 using Discord.Commands;
 using Discord.Interactions;
 using Discord.WebSocket;
@@ -17,10 +17,10 @@ if (builder.Environment.IsDevelopment())
 	builder.Configuration.AddUserSecrets<Program>();
 }
 
-builder.Services.Configure<BChanWorkerConfiguration>(builder.Configuration.GetSection(BChanWorkerConfiguration.Section));
+builder.Services.Configure<BChanBotConfiguration>(builder.Configuration.GetSection(BChanBotConfiguration.Section));
 
 builder.Services.AddNpgsql<AppDbContext>(
-	builder.Configuration.GetSection("BChan").Get<BChanWorkerConfiguration>()!.DbConnectionString);
+	builder.Configuration.GetSection("BChan").Get<BChanBotConfiguration>()!.DbConnectionString);
 
 builder.Services.AddSingleton(typeof(ScopedServiceAccessor<>));
 

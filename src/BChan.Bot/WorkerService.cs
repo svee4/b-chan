@@ -5,13 +5,13 @@ using Discord.Interactions;
 using Discord.WebSocket;
 using Microsoft.Extensions.Options;
 
-namespace BChan.Worker;
+namespace BChan.Bot;
 
 public class WorkerService(
 	DiscordSocketClient socketClient,
 	CommandService commandService,
 	InteractionService interactionService,
-	IOptions<BChanWorkerConfiguration> configurationOptions,
+	IOptions<BChanBotConfiguration> configurationOptions,
 	IServiceProvider serviceProvider,
 	ILogger<WorkerService> logger) : IHostedService
 {
@@ -19,7 +19,7 @@ public class WorkerService(
 	private readonly DiscordSocketClient _socketClient = socketClient;
 	private readonly CommandService _commandService = commandService;
 	private readonly InteractionService _interactionService = interactionService;
-	private readonly BChanWorkerConfiguration _configuration = configurationOptions.Value;
+	private readonly BChanBotConfiguration _configuration = configurationOptions.Value;
 	private readonly IServiceProvider _serviceProvider = serviceProvider;
 	private readonly ILogger<WorkerService> _logger = logger;
 
@@ -51,9 +51,7 @@ public class WorkerService(
 			}
 
 			if (!anyCommands)
-			{
 				_logger.LogInformation("No commands registered");
-			}
 
 			// for some reason, AddModulesAsync calls the constructors of the modules,
 			// which means to use scoped dependencies you need to create a scope for it.
@@ -71,9 +69,7 @@ public class WorkerService(
 			}
 
 			if (!anyInteractions)
-			{
 				_logger.LogInformation("No interactions registered");
-			}
 		}
 
 		async Task StartClient()
@@ -104,12 +100,12 @@ public class WorkerService(
 		_logger.Log(
 			logLevel: message.Severity switch
 			{
-				Discord.LogSeverity.Critical => LogLevel.Critical,
-				Discord.LogSeverity.Error => LogLevel.Error,
-				Discord.LogSeverity.Warning => LogLevel.Warning,
-				Discord.LogSeverity.Info => LogLevel.Information,
-				Discord.LogSeverity.Verbose => LogLevel.Debug,
-				Discord.LogSeverity.Debug => LogLevel.Debug,
+				LogSeverity.Critical => LogLevel.Critical,
+				LogSeverity.Error => LogLevel.Error,
+				LogSeverity.Warning => LogLevel.Warning,
+				LogSeverity.Info => LogLevel.Information,
+				LogSeverity.Verbose => LogLevel.Debug,
+				LogSeverity.Debug => LogLevel.Debug,
 				_ => throw new UnreachableException(),
 			},
 			message: message.ToString());

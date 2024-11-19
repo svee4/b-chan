@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace BChan.Worker.Database;
+namespace BChan.Bot.Database;
 
 public sealed class BotConfiguration : IEntityTypeConfiguration<BotConfiguration>
 {

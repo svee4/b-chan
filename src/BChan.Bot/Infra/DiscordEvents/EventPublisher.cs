@@ -1,7 +1,7 @@
 using Discord.WebSocket;
 using Immediate.Handlers.Shared;
 
-namespace BChan.Worker.Infra.DiscordEvents;
+namespace BChan.Bot.Infra.DiscordEvents;
 
 public sealed class EventPublisher(
 	DiscordSocketClient socketClient,

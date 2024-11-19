@@ -1,4 +1,4 @@
-namespace BChan.Worker.Features.Test;
+namespace BChan.Bot.Features.Test;
 
 
 // service class so that TestCommand and TestEventConsumer dont duplicate code

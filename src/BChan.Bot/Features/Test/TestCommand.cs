@@ -1,6 +1,6 @@
 using Discord.Interactions;
 
-namespace BChan.Worker.Features.Test;
+namespace BChan.Bot.Features.Test;
 
 public sealed class TestModule(TestService testService) : InteractionModuleBase
 {

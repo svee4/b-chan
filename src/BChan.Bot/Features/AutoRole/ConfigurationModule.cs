@@ -1,8 +1,8 @@
-using BChan.Worker.Infra;
+using BChan.Bot.Infra;
 using Discord.Interactions;
 using Discord.WebSocket;
 
-namespace BChan.Worker.Features.AutoRole;
+namespace BChan.Bot.Features.AutoRole;
 
 [Group("autorole", "Autorole configuration")]
 public sealed class ConfigurationModule(BotConfigurationManager manager, DiscordSocketClient client) : InteractionModuleBase

@@ -3,7 +3,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace BChan.Worker.Migrations
+namespace BChan.Bot.Migrations
 {
     /// <inheritdoc />
     public partial class Initialmigration : Migration

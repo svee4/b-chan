@@ -1,7 +1,7 @@
-using BChan.Worker.Database;
+using BChan.Bot.Database;
 using Microsoft.EntityFrameworkCore;
 
-namespace BChan.Worker.Infra;
+namespace BChan.Bot.Infra;
 
 // i dont know if making this huge manager class is a good idea but we will find out later
 
