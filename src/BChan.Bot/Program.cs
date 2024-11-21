@@ -6,10 +6,14 @@ using BChan.Bot.Infra.DiscordEvents;
 using Discord.Commands;
 using Discord.Interactions;
 using Discord.WebSocket;
+using Immediate.Handlers.Shared;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
+[assembly: Behaviors(typeof(ExceptionLoggingBehavior<,>))]
+
 #pragma warning disable IDE0058 // Expression value is never used
+
 
 var builder = Host.CreateApplicationBuilder(args);
 
@@ -37,7 +41,7 @@ builder.Services.AddScoped<TestService>();
 builder.Services.AddSingleton<DiscordNetLogger>();
 
 builder.Services.AddHandlers();
-
+builder.Services.AddBehaviors();
 
 var host = builder.Build();
 
