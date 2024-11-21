@@ -13,8 +13,6 @@ namespace BChan.Bot.Features.Starboard;
 [Handler]
 public static partial class ReactionAddedEventHandler
 {
-	private static readonly Lazy<Random> _rand = new();
-
 	private static readonly Emoji _starEmoji = Emoji.Parse(":star:");
 	private static readonly Emoji _dizzyEmoji = Emoji.Parse(":dizzy:");
 	private static readonly Emoji _sparklesEmoji = Emoji.Parse(":sparkles:");
@@ -95,11 +93,10 @@ public static partial class ReactionAddedEventHandler
 
 	private static string FormatStarboardMessageContent(int starCount, ulong channelId)
 	{
-		var emoji = _emojis[_rand.Value.Next(_emojis.Length)];
 		return new StringBuilder()
 			.AppendJoin(' ', (object[])
 			[
-				emoji,
+				_emojis[Random.Shared.Next(_emojis.Length)],
 				Format.Bold(starCount.ToString(CultureInfo.InvariantCulture)),
 				$"<#{channelId.ToString(CultureInfo.InvariantCulture)}>",
 			])
