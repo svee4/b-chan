@@ -60,6 +60,7 @@ public static partial class ReactionAddedEventHandler
 					.WithName(Format.Bold("Source"))
 					.WithValue(Format.Url("Jump!", message.GetJumpUrl()))
 			)
+			.WithColor(0xffcc00)
 			.WithFooter(builder => { builder.WithText(message.Id.ToString(CultureInfo.InvariantCulture)); })
 			.Build();
 }

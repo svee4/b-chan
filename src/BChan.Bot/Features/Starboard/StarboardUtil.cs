@@ -67,8 +67,9 @@ public static class StarboardUtil
 		int newStarCount,
 		CancellationToken ct)
 	{
-		var starredMessage = await GetStarredMessageById(dbContext, starredMessageId, ct)
-		                     ?? throw new InvalidOperationException();
+		var starredMessage = await GetStarredMessageById(dbContext, starredMessageId, ct);
+
+		if (starredMessage is null) return;
 
 		await UpdateStarCountWithStarredMessage(client, config, starredMessage, newStarCount, ct);
 	}
