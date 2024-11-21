@@ -5,7 +5,8 @@ using Discord.WebSocket;
 namespace BChan.Bot.Features.AutoRole;
 
 [Group("autorole", "Autorole configuration")]
-public sealed class ConfigurationModule(BotConfigurationManager manager, DiscordSocketClient client) : InteractionModuleBase
+public sealed class ConfigurationModule(BotConfigurationManager manager, DiscordSocketClient client)
+	: InteractionModuleBase
 {
 	private readonly BotConfigurationManager _manager = manager;
 	private readonly DiscordSocketClient _client = client;
@@ -32,8 +33,8 @@ public sealed class ConfigurationModule(BotConfigurationManager manager, Discord
 	{
 		var roles = await _manager.GetAutoRoles(default);
 		var roleNames = _client.Guilds.Single().Roles
-							.Where(role => roles.Contains(role.Id))
-							.Select(role => role.Name);
+			.Where(role => roles.Contains(role.Id))
+			.Select(role => role.Name);
 		await RespondAsync($"Autoroles: {string.Join(", ", roleNames)}");
 	}
 }

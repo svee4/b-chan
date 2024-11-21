@@ -1,3 +1,4 @@
+using Discord;
 using Discord.WebSocket;
 using Immediate.Handlers.Shared;
 
@@ -20,6 +21,7 @@ public sealed class EventPublisher(
 
 		_socketClient.UserVoiceStateUpdated += UserVoiceStateUpdated;
 		_socketClient.UserJoined += UserJoined;
+		_socketClient.ReactionAdded += ReactionAdded;
 
 		_logger.LogInformation("Started");
 		return Task.CompletedTask;
@@ -31,6 +33,7 @@ public sealed class EventPublisher(
 
 		_socketClient.UserVoiceStateUpdated -= UserVoiceStateUpdated;
 		_socketClient.UserJoined -= UserJoined;
+		_socketClient.ReactionAdded += ReactionAdded;
 
 		_logger.LogInformation("Stopped");
 		return Task.CompletedTask;
@@ -42,6 +45,9 @@ public sealed class EventPublisher(
 
 	private Task UserJoined(SocketGuildUser arg) =>
 		PublishEvent(new UserJoinedEvent(arg));
+	
+	private Task ReactionAdded(Cacheable<IUserMessage, ulong> message, Cacheable<IMessageChannel, ulong> channel, SocketReaction reaction) =>
+		PublishEvent(new ReactionAddedEvent(message, channel, reaction));
 
 
 	// returns a task only because the event handlers need to return task and this makes them able to be oneliners

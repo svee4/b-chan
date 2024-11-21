@@ -57,22 +57,17 @@ static void AddDiscordServices(HostApplicationBuilder builder)
 		new DiscordSocketConfig()
 		{
 			LogLevel = Discord.LogSeverity.Debug,
-			GatewayIntents = Discord.GatewayIntents.AllUnprivileged | Discord.GatewayIntents.GuildMembers
+			GatewayIntents = Discord.GatewayIntents.AllUnprivileged
+			                 | Discord.GatewayIntents.GuildMembers
+			                 | Discord.GatewayIntents.MessageContent
 		}));
 
 	builder.Services.AddSingleton(_ => new CommandService(
-		new CommandServiceConfig()
-		{
-			LogLevel = Discord.LogSeverity.Debug
-		}));
+		new CommandServiceConfig() { LogLevel = Discord.LogSeverity.Debug }));
 
 	builder.Services.AddSingleton(sp => new InteractionService(
 		sp.GetRequiredService<DiscordSocketClient>().Rest,
-		new InteractionServiceConfig()
-		{
-			LogLevel = Discord.LogSeverity.Debug,
-			AutoServiceScopes = true
-		}));
+		new InteractionServiceConfig() { LogLevel = Discord.LogSeverity.Debug, AutoServiceScopes = true }));
 }
 
 static async Task SetupDatabase(AppDbContext dbContext)

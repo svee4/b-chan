@@ -3,8 +3,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace BChan.Bot.Migrations
-{
+namespace BChan.Bot.Migrations;
+
     /// <inheritdoc />
     public partial class Initialmigration : Migration
     {
@@ -32,4 +32,3 @@ namespace BChan.Bot.Migrations
                 name: "BotConfiguration");
         }
     }
-}
