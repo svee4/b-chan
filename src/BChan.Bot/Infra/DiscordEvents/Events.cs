@@ -15,7 +15,4 @@ public sealed record ReactionAddedEvent(
 public sealed record ReactionRemovedEvent(
 	Cacheable<IUserMessage, ulong> Message,
 	Cacheable<IMessageChannel, ulong> Channel,
-	SocketReaction Reaction)
-{
-	public object Reactions { get; set; }
-}
+	SocketReaction Reaction);
