@@ -1,5 +1,4 @@
 using BChan.Bot.Database;
-using Discord;
 using Microsoft.EntityFrameworkCore;
 
 namespace BChan.Bot.Infra;
