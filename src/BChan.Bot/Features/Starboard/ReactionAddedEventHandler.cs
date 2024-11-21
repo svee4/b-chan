@@ -101,7 +101,7 @@ public static partial class ReactionAddedEventHandler
 			[
 				emoji,
 				Format.Bold(starCount.ToString(CultureInfo.InvariantCulture)),
-				"<#", channelId.ToString(CultureInfo.InvariantCulture), ">",
+				$"<#{channelId.ToString(CultureInfo.InvariantCulture)}>",
 			])
 			.ToString();
 	}
