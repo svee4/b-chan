@@ -27,6 +27,6 @@ public static partial class ReactionRemovedEventHandler
 		var newStarCount = metadata?.ReactionCount ?? 0;
 #pragma warning restore CA1508
 
-		await StarboardUtil.UpdateMessageStarCount(dbContext, client, config, message.Id, newStarCount, ct);
+		await StarboardUtil.UpdateStarCountForMessage(dbContext, client, config, message.Id, newStarCount, ct);
 	}
 }

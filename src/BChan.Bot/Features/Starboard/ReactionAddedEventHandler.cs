@@ -36,7 +36,7 @@ public static partial class ReactionAddedEventHandler
 		var starredMessage = await StarboardUtil.GetStarredMessageById(dbContext, message.Id, ct);
 		if (starredMessage != null)
 		{
-			await StarboardUtil.UpdateStarredMessageStarCount(client, config, starredMessage, actualStarCount, ct);
+			await StarboardUtil.UpdateStarCountWithStarredMessage(client, config, starredMessage, actualStarCount, ct);
 		}
 		else
 		{

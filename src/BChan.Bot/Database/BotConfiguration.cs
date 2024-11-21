@@ -9,14 +9,14 @@ public sealed class BotConfiguration : IEntityTypeConfiguration<BotConfiguration
 
 	public IList<ulong> AutoRolesIds { get; private init; } = null!;
 
-	public byte MinStarboardReactions { get; set; } = 1;
+	public byte MinStarboardReactions { get; set; } = 3;
 
 	public ulong? StarboardChannelId { get; set; }
 
 	public static BotConfiguration CreateDefault() => new()
 	{
 		AutoRolesIds = [],
-		MinStarboardReactions = 1,
+		MinStarboardReactions = 3,
 		StarboardChannelId = null,
 	};
 

@@ -39,7 +39,7 @@ public static class StarboardUtil
 			])
 			.ToString();
 
-	public static async Task UpdateStarredMessageStarCount(
+	public static async Task UpdateStarCountWithStarredMessage(
 		DiscordSocketClient client,
 		BotConfigurationManager config,
 		StarredMessage starredMessage,
@@ -59,7 +59,7 @@ public static class StarboardUtil
 		}
 	}
 
-	public static async Task UpdateMessageStarCount(
+	public static async Task UpdateStarCountForMessage(
 		AppDbContext dbContext,
 		DiscordSocketClient client,
 		BotConfigurationManager config,
@@ -70,6 +70,6 @@ public static class StarboardUtil
 		var starredMessage = await GetStarredMessageById(dbContext, starredMessageId, ct)
 		                     ?? throw new InvalidOperationException();
 
-		await UpdateStarredMessageStarCount(client, config, starredMessage, newStarCount, ct);
+		await UpdateStarCountWithStarredMessage(client, config, starredMessage, newStarCount, ct);
 	}
 }
