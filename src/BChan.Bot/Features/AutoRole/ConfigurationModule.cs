@@ -5,8 +5,7 @@ using Discord.WebSocket;
 namespace BChan.Bot.Features.AutoRole;
 
 [Group("autorole", "Autorole configuration")]
-public sealed class ConfigurationModule(BotConfigurationManager manager, DiscordSocketClient client)
-	: InteractionModuleBase
+public sealed class ConfigurationModule(BotConfigurationManager manager, DiscordSocketClient client) : InteractionModuleBase
 {
 	private readonly BotConfigurationManager _manager = manager;
 	private readonly DiscordSocketClient _client = client;

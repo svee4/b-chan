@@ -10,67 +10,49 @@ namespace BChan.Bot.Features.Starboard;
 
 public static class StarboardUtil
 {
-	public static readonly Emoji StarEmoji = Emoji.Parse(":star:");
-	public static readonly Emoji DizzyEmoji = Emoji.Parse(":dizzy:");
-	public static readonly Emoji SparklesEmoji = Emoji.Parse(":sparkles:");
+	public static Emoji StarEmoji { get; } = Emoji.Parse(":star:");
+	public static Emoji DizzyEmoji { get; } = Emoji.Parse(":dizzy:");
+	public static Emoji SparklesEmoji { get; } = Emoji.Parse(":sparkles:");
 
-	public static readonly Emoji[] Emojis =
+	public static IReadOnlyList<Emoji> Emojis { get; } =
 	[
 		StarEmoji,
 		DizzyEmoji,
 		SparklesEmoji,
 	];
 
-	public static async Task<StarredMessage?> GetStarredMessageById(
+	public static async Task<StarredMessage?> GetStarredMessageByMessageId(
 		AppDbContext dbContext,
 		ulong messageId,
-		CancellationToken ct)
-		=> await dbContext.StarredMessages
+		CancellationToken ct) =>
+		await dbContext.StarredMessages
 			.Where(m => m.MessageId == messageId)
 			.FirstOrDefaultAsync(ct);
 
-	public static string FormatStarboardMessageContent(int starCount, ulong channelId)
-		=> new StringBuilder()
-			.AppendJoin(' ', (object[])
-			[
-				Emojis[Random.Shared.Next(Emojis.Length)],
-				Format.Bold(starCount.ToString(CultureInfo.InvariantCulture)),
-				$"<#{channelId.ToString(CultureInfo.InvariantCulture)}>",
-			])
+	public static string FormatStarboardMessageContent(int starCount, ulong channelId) =>
+		new StringBuilder()
+			.AppendJoin(
+				' ',
+				(object[])[
+					Emojis[Random.Shared.Next(Emojis.Count)],
+					Format.Bold(starCount.ToString(CultureInfo.InvariantCulture)),
+					$"<#{channelId.ToString(CultureInfo.InvariantCulture)}>",
+				])
 			.ToString();
 
-	public static async Task UpdateStarCountWithStarredMessage(
+	public static async Task UpdateStarredMessageStarCount(
 		DiscordSocketClient client,
-		BotConfigurationManager config,
 		StarredMessage starredMessage,
 		int newStarCount,
 		CancellationToken ct)
 	{
-		var starboardChannelId = await config.GetStarboardChannelId(ct);
-		if (starboardChannelId == null) return;
-
-		var starboardChannel = await client.GetChannelAsync(starboardChannelId.Value,
-			new RequestOptions { CancelToken = ct });
-
-		if (starboardChannel is ITextChannel textChannel)
+		if (await client.GetChannelAsync(starredMessage.StarboardChannelId, new RequestOptions { CancelToken = ct })
+			is ITextChannel textChannel)
 		{
-			await textChannel.ModifyMessageAsync(starredMessage.StarboardMessageId,
-				m => { m.Content = FormatStarboardMessageContent(newStarCount, starredMessage.MessageId); });
+			_ = await textChannel.ModifyMessageAsync(
+				messageId: starredMessage.StarboardMessageId,
+				func: m => m.Content = FormatStarboardMessageContent(newStarCount, starredMessage.ChannelId),
+				options: new RequestOptions { CancelToken = ct });
 		}
-	}
-
-	public static async Task UpdateStarCountForMessage(
-		AppDbContext dbContext,
-		DiscordSocketClient client,
-		BotConfigurationManager config,
-		ulong starredMessageId,
-		int newStarCount,
-		CancellationToken ct)
-	{
-		var starredMessage = await GetStarredMessageById(dbContext, starredMessageId, ct);
-
-		if (starredMessage is null) return;
-
-		await UpdateStarCountWithStarredMessage(client, config, starredMessage, newStarCount, ct);
 	}
 }

@@ -16,3 +16,5 @@ public sealed record ReactionRemovedEvent(
 	Cacheable<IUserMessage, ulong> Message,
 	Cacheable<IMessageChannel, ulong> Channel,
 	SocketReaction Reaction);
+
+public sealed record MessageDeletedEvent(Cacheable<IMessage, ulong> Message, Cacheable<IMessageChannel, ulong> Channel);
