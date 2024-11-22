@@ -7,9 +7,9 @@ public sealed class BotConfiguration : IEntityTypeConfiguration<BotConfiguration
 {
 	public int Id { get; private set; } // always 1... right ?
 
-	public IList<ulong> AutoRolesIds { get; private init; } = null!;
+	public IList<ulong> AutoRolesIds { get; private set; } = null!;
 
-	public byte MinStarboardReactions { get; set; } = 3;
+	public int MinStarboardReactions { get; set; }
 
 	public ulong? StarboardChannelId { get; set; }
 
