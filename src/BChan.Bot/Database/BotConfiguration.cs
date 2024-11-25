@@ -9,9 +9,15 @@ public sealed class BotConfiguration : IEntityTypeConfiguration<BotConfiguration
 
 	public IList<ulong> AutoRolesIds { get; private set; } = null!;
 
-	public static BotConfiguration CreateDefault() => new BotConfiguration()
+	public int MinStarboardReactions { get; set; }
+
+	public ulong? StarboardChannelId { get; set; }
+
+	public static BotConfiguration CreateDefault() => new()
 	{
-		AutoRolesIds = []
+		AutoRolesIds = [],
+		MinStarboardReactions = 3,
+		StarboardChannelId = null,
 	};
 
 	public void Configure(EntityTypeBuilder<BotConfiguration> builder) { }

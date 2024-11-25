@@ -29,5 +29,16 @@ public sealed class BotConfigurationManager(AppDbContext dbContext)
 
 	public async Task RemoveAutoRole(ulong id, CancellationToken token) =>
 		await EditAndSave(config => config.AutoRolesIds.Remove(id), token);
-}
 
+	public async Task<int> GetMinStarboardReactions(CancellationToken token) =>
+		(await GetBotConfiguration(token)).MinStarboardReactions;
+
+	public async Task SetMinStarboardReactions(byte value, CancellationToken token) =>
+		await EditAndSave(config => config.MinStarboardReactions = value, token);
+
+	public async Task<ulong?> GetStarboardChannelId(CancellationToken token) =>
+		(await GetBotConfiguration(token)).StarboardChannelId;
+
+	public async Task SetStarboardChannelId(ulong id, CancellationToken token) =>
+		await EditAndSave(config => config.StarboardChannelId = id, token);
+}

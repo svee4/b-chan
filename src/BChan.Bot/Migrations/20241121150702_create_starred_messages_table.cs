@@ -6,22 +6,23 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BChan.Bot.Migrations;
 
     /// <inheritdoc />
-    public partial class Initialmigration : Migration
+    public partial class create_starred_messages_table : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "BotConfiguration",
+                name: "StarredMessages",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    AutoRolesIds = table.Column<decimal[]>(type: "numeric(20,0)[]", nullable: false)
+                    MessageId = table.Column<decimal>(type: "numeric(20,0)", nullable: false),
+                    StarboardMessageId = table.Column<decimal>(type: "numeric(20,0)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BotConfiguration", x => x.Id);
+                    table.PrimaryKey("PK_StarredMessages", x => x.Id);
                 });
         }
 
@@ -29,6 +30,6 @@ namespace BChan.Bot.Migrations;
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "BotConfiguration");
+                name: "StarredMessages");
         }
     }

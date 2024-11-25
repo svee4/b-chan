@@ -58,31 +58,26 @@ static void AddDiscordServices(HostApplicationBuilder builder)
 	// TODO: actual configs
 
 	builder.Services.AddSingleton(_ => new DiscordSocketClient(
-		new DiscordSocketConfig()
+		new DiscordSocketConfig
 		{
 			LogLevel = Discord.LogSeverity.Debug,
-			GatewayIntents = Discord.GatewayIntents.AllUnprivileged | Discord.GatewayIntents.GuildMembers
+			GatewayIntents = Discord.GatewayIntents.AllUnprivileged
+			                 | Discord.GatewayIntents.GuildMembers
+			                 | Discord.GatewayIntents.MessageContent
 		}));
 
 	builder.Services.AddSingleton(_ => new CommandService(
-		new CommandServiceConfig()
-		{
-			LogLevel = Discord.LogSeverity.Debug
-		}));
+		new CommandServiceConfig { LogLevel = Discord.LogSeverity.Debug }));
 
 	builder.Services.AddSingleton(sp => new InteractionService(
 		sp.GetRequiredService<DiscordSocketClient>().Rest,
-		new InteractionServiceConfig()
-		{
-			LogLevel = Discord.LogSeverity.Debug,
-			AutoServiceScopes = true
-		}));
+		new InteractionServiceConfig { LogLevel = Discord.LogSeverity.Debug, AutoServiceScopes = true }));
 }
 
 static async Task SetupDatabase(AppDbContext dbContext)
 {
 	// we migrate automatically cuz we are lazy
-	await Microsoft.EntityFrameworkCore.RelationalDatabaseFacadeExtensions.MigrateAsync(dbContext.Database);
+	await RelationalDatabaseFacadeExtensions.MigrateAsync(dbContext.Database);
 
 #pragma warning disable CS0618 // Type or member is obsolete
 
