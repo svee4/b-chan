@@ -2,7 +2,7 @@
 Fun discord bot
 
 # Developing
-- Install .NET 8 or newer SDK
+- Install .NET 9 or newer SDK
 - Have a Discord bot ready to go
 - Have a Postgres server ready to go
 - Set the required configuration values
