@@ -1,4 +1,3 @@
-using Discord;
 using Discord.WebSocket;
 using Immediate.Handlers.Shared;
 

@@ -12,8 +12,6 @@ public sealed class TestService
 		_logger = logger;
 	}
 
-	public void DoServiceThing()
-	{
+	public void DoServiceThing() =>
 		_logger.LogInformation("Doing test service thing");
-	}
 }

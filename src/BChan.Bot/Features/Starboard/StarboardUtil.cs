@@ -1,10 +1,9 @@
-using System.Globalization;
-using System.Text;
 using BChan.Bot.Database;
-using BChan.Bot.Infra;
 using Discord;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
+using System.Text;
 
 namespace BChan.Bot.Features.Starboard;
 

@@ -1,5 +1,5 @@
-using System.Diagnostics;
 using Discord;
+using System.Diagnostics;
 
 namespace BChan.Bot.Infra;
 

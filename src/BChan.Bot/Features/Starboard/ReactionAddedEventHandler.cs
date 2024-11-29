@@ -1,4 +1,3 @@
-using System.Globalization;
 using BChan.Bot.Database;
 using BChan.Bot.Infra;
 using BChan.Bot.Infra.DiscordEvents;
@@ -6,6 +5,7 @@ using Discord;
 using Discord.WebSocket;
 using Immediate.Handlers.Shared;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 namespace BChan.Bot.Features.Starboard;
 
