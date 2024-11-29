@@ -1,5 +1,4 @@
 using BChan.Bot.Database;
-using BChan.Bot.Infra;
 using BChan.Bot.Infra.DiscordEvents;
 using Discord.WebSocket;
 using Immediate.Handlers.Shared;
