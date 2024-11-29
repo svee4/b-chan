@@ -1,18 +1,14 @@
 using BChan.Bot.Database;
 using BChan.Bot.Infra.DiscordEvents;
 using Discord.WebSocket;
-using Immediate.Handlers.Shared;
 
 namespace BChan.Bot.Features.Starboard;
 
-[Handler]
-public static partial class ReactionRemovedEventHandler
+public sealed class ReactionRemovedEventHandler(
+	DiscordSocketClient client,
+	AppDbContext dbContext) : IEventHandler<ReactionRemovedEvent>
 {
-	private static async ValueTask HandleAsync(
-		ReactionRemovedEvent @event,
-		DiscordSocketClient client,
-		AppDbContext dbContext,
-		CancellationToken ct)
+	public async Task Handle(ReactionRemovedEvent @event, CancellationToken token)
 	{
 		if (!StarboardUtil.StarEmoji.Equals(@event.Reaction.Emote)) return;
 
@@ -29,9 +25,9 @@ public static partial class ReactionRemovedEventHandler
 			newStarCount = 0;
 		}
 
-		if (await StarboardUtil.GetStarredMessageByMessageId(dbContext, message.Id, ct) is { } starredMessage)
+		if (await StarboardUtil.GetStarredMessageByMessageId(dbContext, message.Id, token) is { } starredMessage)
 		{
-			await StarboardUtil.UpdateStarredMessageStarCount(client, starredMessage, newStarCount, ct);
+			await StarboardUtil.UpdateStarredMessageStarCount(client, starredMessage, newStarCount, token);
 		}
 	}
 }

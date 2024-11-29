@@ -1,16 +1,11 @@
 using BChan.Bot.Infra;
 using BChan.Bot.Infra.DiscordEvents;
-using Immediate.Handlers.Shared;
 
-namespace BChan.Worker.Features.AutoRole;
+namespace BChan.Bot.Features.AutoRole;
 
-[Handler]
-public static partial class UserJoinedEventHandler
+public sealed class UserJoinedEventHandler(BotConfigurationManager manager) : IEventHandler<UserJoinedEvent>
 {
-	private static async ValueTask HandleAsync(
-		UserJoinedEvent @event,
-		BotConfigurationManager manager,
-		CancellationToken token)
+	public async Task Handle(UserJoinedEvent @event, CancellationToken token)
 	{
 		var roles = await manager.GetAutoRoles(token);
 

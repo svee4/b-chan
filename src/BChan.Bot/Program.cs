@@ -6,11 +6,8 @@ using BChan.Bot.Infra.DiscordEvents;
 using Discord.Commands;
 using Discord.Interactions;
 using Discord.WebSocket;
-using Immediate.Handlers.Shared;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
-
-[assembly: Behaviors(typeof(ExceptionLoggingBehavior<,>))]
 
 #pragma warning disable IDE0058 // Expression value is never used
 
@@ -29,8 +26,7 @@ builder.Services.Configure<BChanBotConfiguration>(builder.Configuration.GetSecti
 builder.Services.AddNpgsql<AppDbContext>(
 	builder.Configuration.GetSection("BChan").Get<BChanBotConfiguration>()!.DbConnectionString);
 
-builder.Services.AddSingleton(typeof(ScopedServiceAccessor<>));
-
+AddHandlers(builder.Services);
 AddDiscordServices(builder);
 
 builder.Services.AddHostedService<EventPublisher>(); // EventPublisher must be before WorkerService
@@ -39,9 +35,6 @@ builder.Services.AddHostedService<WorkerService>();
 builder.Services.AddScoped<BotConfigurationManager>();
 builder.Services.AddScoped<TestService>();
 builder.Services.AddSingleton<DiscordNetLogger>();
-
-builder.Services.AddBChanBotHandlers();
-builder.Services.AddBChanBotBehaviors();
 
 var host = builder.Build();
 
@@ -71,6 +64,24 @@ static void AddDiscordServices(HostApplicationBuilder builder)
 	builder.Services.AddSingleton(sp => new InteractionService(
 		sp.GetRequiredService<DiscordSocketClient>().Rest,
 		new InteractionServiceConfig { LogLevel = Discord.LogSeverity.Debug, AutoServiceScopes = true }));
+}
+
+static void AddHandlers(IServiceCollection services)
+{
+	var types = typeof(Program).Assembly
+		.GetTypes()
+		.Select(type => (Type: type, Interface: type.GetInterface("BChan.Bot.Infra.DiscordEvents.IEventHandler`1")))
+		.Where(tuple => tuple.Interface is not null);
+
+	foreach (var (handlerType, handlerInterface) in types)
+	{
+		var eventType = handlerInterface!.GetGenericArguments().Single();
+		var accessorImplType = typeof(ScopedServiceAccessor<>).MakeGenericType(handlerType);
+		var accessorServiceType = typeof(IScopedServiceAccessor<>).MakeGenericType(handlerInterface);
+
+		services.AddScoped(handlerType);
+		services.AddSingleton(serviceType: accessorServiceType, implementationType: accessorImplType);
+	}
 }
 
 static async Task SetupDatabase(AppDbContext dbContext)

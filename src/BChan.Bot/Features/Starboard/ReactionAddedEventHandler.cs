@@ -3,25 +3,21 @@ using BChan.Bot.Infra;
 using BChan.Bot.Infra.DiscordEvents;
 using Discord;
 using Discord.WebSocket;
-using Immediate.Handlers.Shared;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 
 namespace BChan.Bot.Features.Starboard;
 
-[Handler]
-public static partial class ReactionAddedEventHandler
+public sealed class ReactionAddedEventHandler(
+	BotConfigurationManager config,
+	DiscordSocketClient client,
+	AppDbContext dbContext) : IEventHandler<ReactionAddedEvent>
 {
-	private static async ValueTask HandleAsync(
-		ReactionAddedEvent @event,
-		BotConfigurationManager config,
-		DiscordSocketClient client,
-		AppDbContext dbContext,
-		CancellationToken ct)
+	public async Task Handle(ReactionAddedEvent @event, CancellationToken token)
 	{
 		if (!StarboardUtil.StarEmoji.Equals(@event.Reaction.Emote)) return;
 
-		if (await config.GetStarboardChannelId(ct) is not { } starboardChannelId) return;
+		if (await config.GetStarboardChannelId(token) is not { } starboardChannelId) return;
 
 		var message = await @event.Message.GetOrDownloadAsync();
 
@@ -33,17 +29,17 @@ public static partial class ReactionAddedEventHandler
 		}
 
 		// cant star starboard messages
-		if (await dbContext.StarredMessages.AnyAsync(starredMessage => starredMessage.StarboardMessageId == message.Id, ct))
+		if (await dbContext.StarredMessages.AnyAsync(starredMessage => starredMessage.StarboardMessageId == message.Id, token))
 		{
 			return;
 		}
 
-		var minStarCount = await config.GetMinStarboardReactions(ct);
+		var minStarCount = await config.GetMinStarboardReactions(token);
 		var actualStarCount = message.Reactions[StarboardUtil.StarEmoji].ReactionCount;
 
-		if (await StarboardUtil.GetStarredMessageByMessageId(dbContext, message.Id, ct) is { } starredMessage)
+		if (await StarboardUtil.GetStarredMessageByMessageId(dbContext, message.Id, token) is { } starredMessage)
 		{
-			await StarboardUtil.UpdateStarredMessageStarCount(client, starredMessage, actualStarCount, ct);
+			await StarboardUtil.UpdateStarredMessageStarCount(client, starredMessage, actualStarCount, token);
 		}
 		else
 		{
@@ -60,22 +56,23 @@ public static partial class ReactionAddedEventHandler
 					messageId: message.Id,
 					channelId: message.Channel.Id,
 					starboardMessageId: starboardMessage.Id,
-					starboardChannelId: starboardChannelId), ct);
+					starboardChannelId: starboardChannelId), token);
 
-			_ = await dbContext.SaveChangesAsync(ct);
+			_ = await dbContext.SaveChangesAsync(token);
 		}
 	}
 
 	private static Embed BuildEmbed(IMessage message) =>
-		new EmbedBuilder()
-			.WithAuthor(message.Author)
-			.WithDescription(message.Content)
-			.WithFields(
-				new EmbedFieldBuilder()
-					.WithName(Format.Bold("Source"))
-					.WithValue(Format.Url("Jump!", message.GetJumpUrl()))
-			)
-			.WithColor(0xffcc00)
-			.WithFooter(builder => builder.WithText(message.Id.ToString(CultureInfo.InvariantCulture)))
-			.Build();
+	new EmbedBuilder()
+		.WithAuthor(message.Author)
+		.WithDescription(message.Content)
+		.WithFields(
+			new EmbedFieldBuilder()
+				.WithName(Format.Bold("Source"))
+				.WithValue(Format.Url("Jump!", message.GetJumpUrl()))
+		)
+		.WithColor(0xffcc00)
+		.WithFooter(builder => builder.WithText(message.Id.ToString(CultureInfo.InvariantCulture)))
+		.Build();
+
 }

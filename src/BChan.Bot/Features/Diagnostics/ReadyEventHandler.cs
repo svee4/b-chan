@@ -1,14 +1,12 @@
 using BChan.Bot.Infra.DiscordEvents;
-using Immediate.Handlers.Shared;
 
 namespace BChan.Bot.Features.Diagnostics;
 
-[Handler]
-public static partial class ReadyEventHandler
+public sealed class ReadyEventHandler : IEventHandler<ReadyEvent>
 {
-	public static ValueTask HandleAsync(ReadyEvent _)
+	public Task Handle(ReadyEvent @event, CancellationToken token)
 	{
 		DiagnosticsModule.ReadyTimestamp = DateTime.UtcNow;
-		return ValueTask.CompletedTask;
+		return Task.CompletedTask;
 	}
 }
