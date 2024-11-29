@@ -33,8 +33,8 @@ builder.Services.AddSingleton(typeof(ScopedServiceAccessor<>));
 
 AddDiscordServices(builder);
 
+builder.Services.AddHostedService<EventPublisher>(); // EventPublisher must be before WorkerService
 builder.Services.AddHostedService<WorkerService>();
-builder.Services.AddHostedService<EventPublisher>();
 
 builder.Services.AddScoped<BotConfigurationManager>();
 builder.Services.AddScoped<TestService>();

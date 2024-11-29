@@ -39,7 +39,7 @@ public sealed partial class EventPublisher(
 	{
 		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogDebug("Publishing event '{Type}'", typeof(TEvent).FullName);
+			_logger.LogDebug("Publishing event {Type}", typeof(TEvent).FullName);
 		}
 
 		var handlers = _serviceProvider.GetService<IEnumerable<ScopedServiceAccessor<IHandler<TEvent, ValueTuple>>>>();
