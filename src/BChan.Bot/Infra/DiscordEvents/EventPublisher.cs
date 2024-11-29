@@ -1,4 +1,5 @@
 using Discord.WebSocket;
+using System.Diagnostics.CodeAnalysis;
 
 namespace BChan.Bot.Infra.DiscordEvents;
 
@@ -9,6 +10,7 @@ public sealed partial class EventPublisher(
 	) : IHostedService, IDisposable
 {
 
+	[SuppressMessage("Usage", "CA2213:Disposable fields should be disposed", Justification = "Not my job")]
 	private readonly DiscordSocketClient _socketClient = socketClient;
 	private readonly IServiceProvider _serviceProvider = serviceProvider;
 	private readonly CancellationTokenSource _cancellationTokenSource = new();
@@ -40,7 +42,7 @@ public sealed partial class EventPublisher(
 	{
 		var accessors = _serviceProvider.GetServices<IScopedServiceAccessor<IEventHandler<T>>>();
 
-		foreach (var accessor in accessors ?? [])
+		foreach (var accessor in accessors)
 		{
 			_ = Task.Run(async () =>
 			{
@@ -59,8 +61,6 @@ public sealed partial class EventPublisher(
 		return Task.CompletedTask;
 	}
 
-	public void Dispose()
-	{
+	public void Dispose() =>
 		_cancellationTokenSource.Dispose();
-	}
 }

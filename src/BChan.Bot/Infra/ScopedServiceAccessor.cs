@@ -18,7 +18,8 @@ public sealed class ScopedServiceAccessor<TService>(IServiceScopeFactory factory
 	public IScopedServiceOwner<TService> CreateScope()
 	{
 		var scope = _factory.CreateScope();
-		return new ScopedServiceOwner<TService>(scope.ServiceProvider.GetRequiredService<TService>(), scope);
+		var service = scope.ServiceProvider.GetRequiredService<TService>();
+		return new ScopedServiceOwner<TService>(service, scope);
 	}
 }
 

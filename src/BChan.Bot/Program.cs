@@ -14,7 +14,7 @@ using Serilog;
 
 var builder = Host.CreateApplicationBuilder(args);
 
-builder.Services.AddSerilog((sp, logger) => logger.ReadFrom.Configuration(sp.GetRequiredService<IConfiguration>()));
+builder.Services.AddSerilog((sp, config) => config.ReadFrom.Configuration(sp.GetRequiredService<IConfiguration>()));
 
 if (builder.Environment.IsDevelopment())
 {
@@ -38,7 +38,7 @@ builder.Services.AddSingleton<DiscordNetLogger>();
 
 var host = builder.Build();
 
-using (var scope = host.Services.CreateScope())
+await using (var scope = host.Services.CreateAsyncScope())
 {
 	await SetupDatabase(scope.ServiceProvider.GetRequiredService<AppDbContext>());
 }
@@ -69,18 +69,16 @@ static void AddDiscordServices(HostApplicationBuilder builder)
 static void AddHandlers(IServiceCollection services)
 {
 	var types = typeof(Program).Assembly
-		.GetTypes()
+		.GetTypes() // this hardcoded type name will not be regretted
 		.Select(type => (Type: type, Interface: type.GetInterface("BChan.Bot.Infra.DiscordEvents.IEventHandler`1")))
 		.Where(tuple => tuple.Interface is not null);
 
 	foreach (var (handlerType, handlerInterface) in types)
 	{
-		var eventType = handlerInterface!.GetGenericArguments().Single();
-		var accessorImplType = typeof(ScopedServiceAccessor<>).MakeGenericType(handlerType);
-		var accessorServiceType = typeof(IScopedServiceAccessor<>).MakeGenericType(handlerInterface);
-
 		services.AddScoped(handlerType);
-		services.AddSingleton(serviceType: accessorServiceType, implementationType: accessorImplType);
+		services.AddSingleton(
+			serviceType: typeof(IScopedServiceAccessor<>).MakeGenericType(handlerInterface!),
+			implementationType: typeof(ScopedServiceAccessor<>).MakeGenericType(handlerType));
 	}
 }
 
@@ -91,7 +89,7 @@ static async Task SetupDatabase(AppDbContext dbContext)
 
 #pragma warning disable CS0618 // Type or member is obsolete
 
-	if (await dbContext.BotConfiguration.FirstOrDefaultAsync() is null)
+	if (await dbContext.BotConfiguration.Order().FirstOrDefaultAsync() is null)
 	{
 		var defaultConfig = BotConfiguration.CreateDefault();
 		await dbContext.BotConfiguration.AddAsync(defaultConfig);
