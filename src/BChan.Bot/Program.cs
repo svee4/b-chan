@@ -40,8 +40,8 @@ builder.Services.AddScoped<BotConfigurationManager>();
 builder.Services.AddScoped<TestService>();
 builder.Services.AddSingleton<DiscordNetLogger>();
 
-builder.Services.AddHandlers();
-builder.Services.AddBehaviors();
+builder.Services.AddBChanBotHandlers();
+builder.Services.AddBChanBotBehaviors();
 
 var host = builder.Build();
 
@@ -52,7 +52,6 @@ using (var scope = host.Services.CreateScope())
 
 await host.RunAsync();
 
-
 static void AddDiscordServices(HostApplicationBuilder builder)
 {
 	// TODO: actual configs
@@ -62,8 +61,8 @@ static void AddDiscordServices(HostApplicationBuilder builder)
 		{
 			LogLevel = Discord.LogSeverity.Debug,
 			GatewayIntents = Discord.GatewayIntents.AllUnprivileged
-			                 | Discord.GatewayIntents.GuildMembers
-			                 | Discord.GatewayIntents.MessageContent
+							 | Discord.GatewayIntents.GuildMembers
+							 | Discord.GatewayIntents.MessageContent
 		}));
 
 	builder.Services.AddSingleton(_ => new CommandService(

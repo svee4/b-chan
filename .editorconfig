@@ -10,6 +10,8 @@ tab_width = 4
 indent_size = 4
 charset = utf-8
 
+[**/Migrations/*]
+generated_code = true
 
 ### Naming rules: ###
 
@@ -335,60 +337,3 @@ dotnet_diagnostic.CA2014.severity = error               # CA2014: Do not use sta
 dotnet_diagnostic.CA2016.severity = error               # CA2016: Forward the CancellationToken parameter to methods that take one
 
 dotnet_diagnostic.RS2008.severity = none                # RS2008: Enable analyzer release tracking
-
-MA0053.public_class_should_be_sealed = true
-MA0053.exceptions_should_be_sealed = true
-
-dotnet_diagnostic.MA0004.severity = none
-dotnet_diagnostic.MA0005.severity = none
-dotnet_diagnostic.MA0006.severity = suggestion
-dotnet_diagnostic.MA0008.severity = none
-dotnet_diagnostic.MA0009.severity = none
-dotnet_diagnostic.MA0010.severity = none
-dotnet_diagnostic.MA0016.severity = none
-dotnet_diagnostic.MA0018.severity = none
-dotnet_diagnostic.MA0024.severity = none
-dotnet_diagnostic.MA0026.severity = suggestion
-dotnet_diagnostic.MA0029.severity = none
-dotnet_diagnostic.MA0030.severity = none
-dotnet_diagnostic.MA0031.severity = warning
-dotnet_diagnostic.MA0032.severity = none
-dotnet_diagnostic.MA0033.severity = error
-dotnet_diagnostic.MA0037.severity = none
-dotnet_diagnostic.MA0038.severity = none
-dotnet_diagnostic.MA0040.severity = none
-dotnet_diagnostic.MA0041.severity = none
-dotnet_diagnostic.MA0047.severity = none
-dotnet_diagnostic.MA0048.severity = none
-dotnet_diagnostic.MA0049.severity = none
-dotnet_diagnostic.MA0051.severity = none
-dotnet_diagnostic.MA0053.severity = warning
-dotnet_diagnostic.MA0054.severity = error
-dotnet_diagnostic.MA0064.severity = error
-dotnet_diagnostic.MA0069.severity = error
-dotnet_diagnostic.MA0071.severity = none
-dotnet_diagnostic.MA0074.severity = none
-dotnet_diagnostic.MA0075.severity = none
-dotnet_diagnostic.MA0076.severity = none
-dotnet_diagnostic.MA0079.severity = none
-dotnet_diagnostic.MA0080.severity = none
-dotnet_diagnostic.MA0094.severity = none
-dotnet_diagnostic.MA0095.severity = none
-dotnet_diagnostic.MA0096.severity = none
-dotnet_diagnostic.MA0097.severity = none
-dotnet_diagnostic.MA0099.severity = error
-dotnet_diagnostic.MA0103.severity = error
-dotnet_diagnostic.MA0110.severity = none
-dotnet_diagnostic.MA0112.severity = none
-dotnet_diagnostic.MA0127.severity = none
-dotnet_diagnostic.MA0137.severity = none
-dotnet_diagnostic.MA0140.severity = error
-dotnet_diagnostic.MA0141.severity = warning
-dotnet_diagnostic.MA0142.severity = warning
-dotnet_diagnostic.MA0147.severity = error
-dotnet_diagnostic.MA0148.severity = none
-dotnet_diagnostic.MA0149.severity = none
-dotnet_diagnostic.MA0154.severity = warning
-dotnet_diagnostic.IDE0305.severity = suggestion
-dotnet_diagnostic.MA0003.severity = suggestion
-dotnet_diagnostic.MA0084.severity = none

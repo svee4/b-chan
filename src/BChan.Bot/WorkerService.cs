@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using BChan.Bot.Infra;
 using Discord;
 using Discord.Commands;
@@ -36,7 +35,7 @@ public class WorkerService(
 		await StartClient();
 
 		_socketClient.InteractionCreated += OnSocketClientInteractionCreated;
-		await _interactionService.RegisterCommandsToGuildAsync(_configuration.DiscordGuildId, deleteMissing: true);
+		_ = await _interactionService.RegisterCommandsToGuildAsync(_configuration.DiscordGuildId, deleteMissing: true);
 
 		return;
 
