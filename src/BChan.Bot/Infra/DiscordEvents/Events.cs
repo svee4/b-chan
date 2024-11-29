@@ -3,18 +3,103 @@ using Discord.WebSocket;
 
 namespace BChan.Bot.Infra.DiscordEvents;
 
-public sealed record UserVoiceStateUpdatedEvent(SocketUser User, SocketVoiceState State1, SocketVoiceState State2);
+/*
 
-public sealed record UserJoinedEvent(SocketGuildUser User);
+Missing events are:
+public sealed record LoggedInEvent();
+public sealed record LoggedOutEvent();
+public sealed record LogEvent(Discord.LogMessage arg0);
 
-public sealed record ReactionAddedEvent(
-	Cacheable<IUserMessage, ulong> Message,
-	Cacheable<IMessageChannel, ulong> Channel,
-	SocketReaction Reaction);
+*/
 
-public sealed record ReactionRemovedEvent(
-	Cacheable<IUserMessage, ulong> Message,
-	Cacheable<IMessageChannel, ulong> Channel,
-	SocketReaction Reaction);
-
+public sealed record ConnectedEvent();
+public sealed record DisconnectedEvent(Exception Exception);
+public sealed record ReadyEvent();
+public sealed record LatencyUpdatedEvent(int Arg1, int Arg2);
+public sealed record ChannelCreatedEvent(SocketChannel Channel);
+public sealed record ChannelDestroyedEvent(SocketChannel Channel);
+public sealed record ChannelUpdatedEvent(SocketChannel ChannelBefore, SocketChannel ChannelAfter);
+public sealed record VoiceChannelStatusUpdatedEvent(Cacheable<SocketVoiceChannel, ulong> VoiceChannel, string StatusBefore, string StatusAfter);
+public sealed record MessageReceivedEvent(SocketMessage Message);
 public sealed record MessageDeletedEvent(Cacheable<IMessage, ulong> Message, Cacheable<IMessageChannel, ulong> Channel);
+public sealed record MessagesBulkDeletedEvent(IReadOnlyCollection<Cacheable<IMessage, ulong>> Messages, Cacheable<IMessageChannel, ulong> Channel);
+public sealed record MessageUpdatedEvent(Cacheable<IMessage, ulong> MessageBefore, SocketMessage MessageAfter, ISocketMessageChannel Channel);
+public sealed record ReactionAddedEvent(Cacheable<IUserMessage, ulong> Message, Cacheable<IMessageChannel, ulong> Channel, SocketReaction Reaction);
+public sealed record ReactionRemovedEvent(Cacheable<IUserMessage, ulong> Message, Cacheable<IMessageChannel, ulong> Channel, SocketReaction Reaction);
+public sealed record ReactionsClearedEvent(Cacheable<IUserMessage, ulong> Message, Cacheable<IMessageChannel, ulong> Channel);
+public sealed record ReactionsRemovedForEmoteEvent(Cacheable<IUserMessage, ulong> Message, Cacheable<IMessageChannel, ulong> Channel, IEmote Emote);
+public sealed record PollVoteAddedEvent(Cacheable<IUser, ulong> User, Cacheable<ISocketMessageChannel, Discord.Rest.IRestMessageChannel, IMessageChannel, ulong> Channel, Cacheable<IUserMessage, ulong> Message, Cacheable<SocketGuild, Discord.Rest.RestGuild, IGuild, ulong>? Guild, ulong Arg5);
+public sealed record PollVoteRemovedEvent(Cacheable<IUser, ulong> User, Cacheable<ISocketMessageChannel, Discord.Rest.IRestMessageChannel, IMessageChannel, ulong> Channel, Cacheable<IUserMessage, ulong> Message, Cacheable<SocketGuild, Discord.Rest.RestGuild, IGuild, ulong>? Guild, ulong Arg5);
+public sealed record RoleCreatedEvent(SocketRole Role);
+public sealed record RoleDeletedEvent(SocketRole Role);
+public sealed record RoleUpdatedEvent(SocketRole RoleBefore, SocketRole RoleAfter);
+public sealed record JoinedGuildEvent(SocketGuild Guild);
+public sealed record LeftGuildEvent(SocketGuild Guild);
+public sealed record GuildAvailableEvent(SocketGuild Guild);
+public sealed record GuildUnavailableEvent(SocketGuild Guild);
+public sealed record GuildMembersDownloadedEvent(SocketGuild Guild);
+public sealed record GuildUpdatedEvent(SocketGuild GuildBefore, SocketGuild GuildAfter);
+public sealed record GuildJoinRequestDeletedEvent(Cacheable<SocketGuildUser, ulong> User, SocketGuild Guild);
+public sealed record GuildScheduledEventCreatedEvent(SocketGuildEvent Event);
+public sealed record GuildScheduledEventUpdatedEvent(Cacheable<SocketGuildEvent, ulong> EventBefore, SocketGuildEvent EventAfter);
+public sealed record GuildScheduledEventCancelledEvent(SocketGuildEvent Event);
+public sealed record GuildScheduledEventCompletedEvent(SocketGuildEvent Event);
+public sealed record GuildScheduledEventStartedEvent(SocketGuildEvent Event);
+public sealed record GuildScheduledEventUserAddEvent(Cacheable<SocketUser, Discord.Rest.RestUser, IUser, ulong> User, SocketGuildEvent Event);
+public sealed record GuildScheduledEventUserRemoveEvent(Cacheable<SocketUser, Discord.Rest.RestUser, IUser, ulong> User, SocketGuildEvent Event);
+public sealed record IntegrationCreatedEvent(IIntegration Integration);
+public sealed record IntegrationUpdatedEvent(IIntegration Integration);
+public sealed record IntegrationDeletedEvent(IGuild Guild, ulong Arg2, Optional<ulong> Arg3);
+public sealed record UserJoinedEvent(SocketGuildUser User);
+public sealed record UserLeftEvent(SocketGuild Guild, SocketUser User);
+public sealed record UserBannedEvent(SocketUser User, SocketGuild Guild);
+public sealed record UserUnbannedEvent(SocketUser User, SocketGuild Guild);
+public sealed record UserUpdatedEvent(SocketUser UserBefore, SocketUser UserAfter);
+public sealed record GuildMemberUpdatedEvent(Cacheable<SocketGuildUser, ulong> UserBefore, SocketGuildUser UserAfter);
+public sealed record UserVoiceStateUpdatedEvent(SocketUser User, SocketVoiceState StateBefore, SocketVoiceState StateAfter);
+public sealed record VoiceServerUpdatedEvent(SocketVoiceServer Server);
+public sealed record CurrentUserUpdatedEvent(SocketSelfUser UserBefore, SocketSelfUser UserAfter);
+public sealed record UserIsTypingEvent(Cacheable<IUser, ulong> User, Cacheable<IMessageChannel, ulong> Channel);
+public sealed record RecipientAddedEvent(SocketGroupUser User);
+public sealed record RecipientRemovedEvent(SocketGroupUser User);
+public sealed record PresenceUpdatedEvent(SocketUser User, SocketPresence PresenceBefore, SocketPresence PresenceAfter);
+public sealed record InviteCreatedEvent(SocketInvite Invite);
+public sealed record InviteDeletedEvent(SocketGuildChannel Channel, string InviteCode);
+public sealed record InteractionCreatedEvent(SocketInteraction Interaction);
+public sealed record ButtonExecutedEvent(SocketMessageComponent MessageComponent);
+public sealed record SelectMenuExecutedEvent(SocketMessageComponent MessageComponent);
+public sealed record SlashCommandExecutedEvent(SocketSlashCommand Command);
+public sealed record UserCommandExecutedEvent(SocketUserCommand Command);
+public sealed record MessageCommandExecutedEvent(SocketMessageCommand Command);
+public sealed record AutocompleteExecutedEvent(SocketAutocompleteInteraction Interaction);
+public sealed record ModalSubmittedEvent(SocketModal Modal);
+public sealed record ApplicationCommandCreatedEvent(SocketApplicationCommand Command);
+public sealed record ApplicationCommandUpdatedEvent(SocketApplicationCommand Command);
+public sealed record ApplicationCommandDeletedEvent(SocketApplicationCommand Command);
+public sealed record ThreadCreatedEvent(SocketThreadChannel Thread);
+public sealed record ThreadUpdatedEvent(Cacheable<SocketThreadChannel, ulong> ThreadBefore, SocketThreadChannel ThreadAfter);
+public sealed record ThreadDeletedEvent(Cacheable<SocketThreadChannel, ulong> Thread);
+public sealed record ThreadMemberJoinedEvent(SocketThreadUser ThreadUser);
+public sealed record ThreadMemberLeftEvent(SocketThreadUser ThreadUser);
+public sealed record StageStartedEvent(SocketStageChannel StageChannel);
+public sealed record StageEndedEvent(SocketStageChannel StageChannel);
+public sealed record StageUpdatedEvent(SocketStageChannel StageChannelBefore, SocketStageChannel StageChannelAfter);
+public sealed record RequestToSpeakEvent(SocketStageChannel StageChannel, SocketGuildUser User);
+public sealed record SpeakerAddedEvent(SocketStageChannel StageChannel, SocketGuildUser User);
+public sealed record SpeakerRemovedEvent(SocketStageChannel StageChannel, SocketGuildUser User);
+public sealed record GuildStickerCreatedEvent(SocketCustomSticker Sticker);
+public sealed record GuildStickerUpdatedEvent(SocketCustomSticker StickerBefore, SocketCustomSticker StickerAfter);
+public sealed record GuildStickerDeletedEvent(SocketCustomSticker Sticker);
+public sealed record WebhooksUpdatedEvent(SocketGuild Guild, SocketChannel Channel);
+public sealed record AuditLogCreatedEvent(SocketAuditLogEntry Entry, SocketGuild Guild);
+public sealed record AutoModRuleCreatedEvent(SocketAutoModRule Rule);
+public sealed record AutoModRuleUpdatedEvent(Cacheable<SocketAutoModRule, ulong> RuleBefore, SocketAutoModRule RuleAfter);
+public sealed record AutoModRuleDeletedEvent(SocketAutoModRule Rule);
+public sealed record AutoModActionExecutedEvent(SocketGuild Guild, AutoModRuleAction RuleAction, AutoModActionExecutedData Data);
+public sealed record EntitlementCreatedEvent(SocketEntitlement Entitlement);
+public sealed record EntitlementUpdatedEvent(Cacheable<SocketEntitlement, ulong> EntitlementBefore, SocketEntitlement EntitlementAfter);
+public sealed record EntitlementDeletedEvent(Cacheable<SocketEntitlement, ulong> Entitlement);
+public sealed record SubscriptionCreatedEvent(SocketSubscription Subscription);
+public sealed record SubscriptionUpdatedEvent(Cacheable<SocketSubscription, ulong> SubscriptionBefore, SocketSubscription SubscriptionAfter);
+public sealed record SubscriptionDeletedEvent(Cacheable<SocketSubscription, ulong> Subscription);
+public sealed record SentRequestEvent(string Method, string Endpoint, double TimeTaken);
