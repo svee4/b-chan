@@ -7,7 +7,7 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<AnalysisLevel>latest-all</AnalysisLevel>
 		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-		<NoWarn>CA1819;CA1034;CA2201;CA1008;CA1054;CA1055;CA1056;CA2227;CA2234;CA1008;CA1815;CA1515</NoWarn>
+		<NoWarn>CA1819;CA1034;CA2201;CA1008;CA1054;CA1055;CA1056;CA2227;CA2234;CA1008;CA1815;CA1515;CA1303</NoWarn>
 
 		<UserSecretsId>cb5ee577-cacc-45af-8373-19c658ab10bc</UserSecretsId>
 	</PropertyGroup>
